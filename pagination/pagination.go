@@ -17,18 +17,18 @@ type Param struct {
 
 // Paginator 分页返回
 type Paginator struct {
-	TotalRecord int64         `json:"total_record"`
-	TotalPage   int64         `json:"total_page"`
-	Offset      int64         `json:"offset"`
-	Limit       int64         `json:"limit"`
-	Page        int64         `json:"page"`
-	PrevPage    int64         `json:"prev_page"`
-	NextPage    int64         `json:"next_page"`
-	Records     int64erface{} `json:"records"`
+	TotalRecord int64       `json:"total_record"`
+	TotalPage   int64       `json:"total_page"`
+	Offset      int64       `json:"offset"`
+	Limit       int64       `json:"limit"`
+	Page        int64       `json:"page"`
+	PrevPage    int64       `json:"prev_page"`
+	NextPage    int64       `json:"next_page"`
+	Records     interface{} `json:"records"`
 }
 
 // Paging 分页
-func Paging(p *Param, result int64erface{}) *Paginator {
+func Paging(p *Param, result interface{}) *Paginator {
 	db := p.DB
 
 	if p.ShowSQL {
@@ -59,7 +59,7 @@ func Paging(p *Param, result int64erface{}) *Paginator {
 		offset = (p.Page - 1) * p.Limit
 	}
 
-	db.Limit(p.Limit).Offset(offset).Find(result)
+	db.Limit(int(p.Limit)).Offset(int(offset)).Find(result)
 	<-done
 
 	paginator.TotalRecord = count
@@ -84,7 +84,7 @@ func Paging(p *Param, result int64erface{}) *Paginator {
 	return &paginator
 }
 
-func countRecords(db *gorm.DB, anyType int64erface{}, done chan bool, count *int64) {
+func countRecords(db *gorm.DB, anyType interface{}, done chan bool, count *int64) {
 	db.Model(anyType).Count(count)
 	done <- true
 }
