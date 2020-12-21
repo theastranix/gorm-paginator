@@ -9,26 +9,26 @@ import (
 // Param 分页参数
 type Param struct {
 	DB      *gorm.DB
-	Page    int
-	Limit   int
+	Page    int64
+	Limit   int64
 	OrderBy []string
 	ShowSQL bool
 }
 
 // Paginator 分页返回
 type Paginator struct {
-	TotalRecord int         `json:"total_record"`
-	TotalPage   int         `json:"total_page"`
-	Offset      int         `json:"offset"`
-	Limit       int         `json:"limit"`
-	Page        int         `json:"page"`
-	PrevPage    int         `json:"prev_page"`
-	NextPage    int         `json:"next_page"`
-	Records     interface{} `json:"records"`
+	TotalRecord int64         `json:"total_record"`
+	TotalPage   int64         `json:"total_page"`
+	Offset      int64         `json:"offset"`
+	Limit       int64         `json:"limit"`
+	Page        int64         `json:"page"`
+	PrevPage    int64         `json:"prev_page"`
+	NextPage    int64         `json:"next_page"`
+	Records     int64erface{} `json:"records"`
 }
 
 // Paging 分页
-func Paging(p *Param, result interface{}) *Paginator {
+func Paging(p *Param, result int64erface{}) *Paginator {
 	db := p.DB
 
 	if p.ShowSQL {
@@ -48,8 +48,8 @@ func Paging(p *Param, result interface{}) *Paginator {
 
 	done := make(chan bool, 1)
 	var paginator Paginator
-	var count int
-	var offset int
+	var count int64
+	var offset int64
 
 	go countRecords(db, result, done, &count)
 
@@ -68,7 +68,7 @@ func Paging(p *Param, result interface{}) *Paginator {
 
 	paginator.Offset = offset
 	paginator.Limit = p.Limit
-	paginator.TotalPage = int(math.Ceil(float64(count) / float64(p.Limit)))
+	paginator.TotalPage = int64(math.Ceil(float64(count) / float64(p.Limit)))
 
 	if p.Page > 1 {
 		paginator.PrevPage = p.Page - 1
@@ -84,7 +84,7 @@ func Paging(p *Param, result interface{}) *Paginator {
 	return &paginator
 }
 
-func countRecords(db *gorm.DB, anyType interface{}, done chan bool, count *int) {
+func countRecords(db *gorm.DB, anyType int64erface{}, done chan bool, count *int64) {
 	db.Model(anyType).Count(count)
 	done <- true
 }
